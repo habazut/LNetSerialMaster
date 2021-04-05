@@ -1,23 +1,9 @@
 /*
  *  (c) 2021, Harald Barth
- *  
- *  This file is part of DCC++EX
  *
- *  This is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ *  GPLv3, for the full license text, see the file LICENSE
  *
- *  It is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program in the file LICENSE.  
- *  If not, see <https://www.gnu.org/licenses/>.
- *
- *  Parts of this work is based on Rocrail, as it was distributed 
+ *  Parts of this file is based on Rocrail, as it was distributed 
  *  under the GPLv2 in 2014.
  *
  */
@@ -26,7 +12,6 @@
 //#include <LocoNet.h>
 #include "DIAG.h"
 #include "LNet.h"
-#include "DCC.h"
 
 //#if (defined(ARDUINO_AVR_MEGA) || defined(ARDUINO_AVR_MEGA2560) || defined(ARDUINO_SAMD_ZERO))
 //#define LOCONET_TX_PIN 49
@@ -181,7 +166,8 @@ SlotNum LNet::setslotdata(byte* msg){
     slotTable[slotnr].speed = speed;
     uint8_t dir = msg[6] & DIRF_DIR;
     slotTable[slotnr].dir   = dir;
-    DCC::setThrottle(slotTable[slotnr].addr, LNetToDCCSpeed(speed), dir);
+    //DCC::setThrottle(slotTable[slotnr].addr, LNetToDCCSpeed(speed), dir);
+
 /*
     slot[slotnr].f0    = ((msg[6] & DIRF_F0) != 0 ? True:False);
     slot[slotnr].f1    = ((msg[6] & DIRF_F1) != 0 ? True:False);
@@ -255,7 +241,7 @@ SlotNum LNet::locospeed  (byte* msg){
   uint8_t speed = msg[2] & 0x7F;
   slotTable[slotnr].speed = speed;
   DIAG(F("set slot# %d speed to %d"), slotnr, speed);
-  DCC::setThrottle(slotTable[slotnr].addr, LNetToDCCSpeed(speed), DCC::getThrottleDirection(slotTable[slotnr].addr));
+  //DCC::setThrottle(slotTable[slotnr].addr, LNetToDCCSpeed(speed), DCC::getThrottleDirection(slotTable[slotnr].addr));
   return slotnr;
 }
 
@@ -267,7 +253,7 @@ SlotNum LNet::locodirf   (byte* msg){
 
   uint8_t dir = (msg[2] & DIRF_DIR); /* 1 == reverse */
   slotTable[slotnr].dir = dir;
-  DCC::setThrottle(slotTable[slotnr].addr, DCC::getThrottleSpeed(slotTable[slotnr].addr), dir);
+  //DCC::setThrottle(slotTable[slotnr].addr, DCC::getThrottleSpeed(slotTable[slotnr].addr), dir);
   slotTable[slotnr].f0  = (msg[2] & DIRF_F0);
 /*
   slot[slotnr].f1  = (msg[2] & DIRF_F1) ? True:False;
