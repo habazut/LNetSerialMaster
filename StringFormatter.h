@@ -38,6 +38,7 @@ class StringFormatter
     // DIAG support
     static Print * diagSerial;
     static void diag( const FSH* input...);
+    static void command( const FSH* input...);
     static void printEscapes(char * input);
     static void printEscape( char c);
 

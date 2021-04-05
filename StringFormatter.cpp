@@ -23,6 +23,13 @@ bool Diag::WITHROTTLE=false;
 bool Diag::ETHERNET=false;
 bool Diag::LCN=false;
 
+void StringFormatter::command( const FSH* input...) {
+  diagSerial->print(F("<"));
+  va_list args;
+  va_start(args, input);
+  send2(diagSerial,input,args);
+  diagSerial->print(F(">"));
+}
  
 void StringFormatter::diag( const FSH* input...) {
   if (!diagSerial) return; 

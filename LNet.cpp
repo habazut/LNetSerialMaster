@@ -162,11 +162,10 @@ SlotNum LNet::setslotdata(byte* msg){
     */
   } else {
     slotTable[slotnr].addr  = addr;
-    uint8_t speed = msg[5] & 0xF7;
-    slotTable[slotnr].speed = speed;
-    uint8_t dir = msg[6] & DIRF_DIR;
-    slotTable[slotnr].dir   = dir;
+    slotTable[slotnr].speed = msg[5] & 0xF7;
+    slotTable[slotnr].dir   = msg[6] & DIRF_DIR;
     //DCC::setThrottle(slotTable[slotnr].addr, LNetToDCCSpeed(speed), dir);
+    COMMAND(F("t 1 %d %d %d"),slotTable[slotnr].addr, slotTable[slotnr].speed, slotTable[slotnr].dir);
 
 /*
     slot[slotnr].f0    = ((msg[6] & DIRF_F0) != 0 ? True:False);
@@ -238,10 +237,10 @@ SlotNum LNet::locospeed  (byte* msg){
   if(slotnr == 0 || slotTable[slotnr].addr == 0 ) {
     return slotnr;
   }
-  uint8_t speed = msg[2] & 0x7F;
-  slotTable[slotnr].speed = speed;
-  DIAG(F("set slot# %d speed to %d"), slotnr, speed);
+  slotTable[slotnr].speed = msg[2] & 0x7F;
+  DIAG(F("set slot# %d speed to %d"), slotnr, slotTable[slotnr].speed);
   //DCC::setThrottle(slotTable[slotnr].addr, LNetToDCCSpeed(speed), DCC::getThrottleDirection(slotTable[slotnr].addr));
+  COMMAND(F("t 1 %d %d %d"),slotTable[slotnr].addr, slotTable[slotnr].speed, slotTable[slotnr].dir);
   return slotnr;
 }
 
@@ -251,10 +250,11 @@ SlotNum LNet::locodirf   (byte* msg){
     return slotnr;
   }
 
-  uint8_t dir = (msg[2] & DIRF_DIR); /* 1 == reverse */
-  slotTable[slotnr].dir = dir;
+  slotTable[slotnr].dir = (msg[2] & DIRF_DIR); /* 1 == reverse */
   //DCC::setThrottle(slotTable[slotnr].addr, DCC::getThrottleSpeed(slotTable[slotnr].addr), dir);
+  COMMAND(F("t 1 %d %d %d"),slotTable[slotnr].addr, slotTable[slotnr].speed, slotTable[slotnr].dir);
   slotTable[slotnr].f0  = (msg[2] & DIRF_F0);
+  COMMAND(F("F %d %d %d"),slotTable[slotnr].addr, 0, slotTable[slotnr].f0);
 /*
   slot[slotnr].f1  = (msg[2] & DIRF_F1) ? True:False;
   slot[slotnr].f2  = (msg[2] & DIRF_F2) ? True:False;
